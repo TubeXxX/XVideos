@@ -276,7 +276,108 @@ margin:20px auto;
   margin-bottom:6px;
 }	
 .unlock-btn:hover { opacity:0.9; }
+/* ===== MOBILE FIX ===== */
+*{
+  box-sizing:border-box;
+}
 
+html, body{
+  overflow-x:hidden;
+}
+
+.display{
+  width:100%;
+  max-width:820px;
+}
+
+.inner-block{
+  width:100%;
+  overflow:hidden;
+}
+
+img{
+  max-width:100%;
+  height:auto;
+}
+
+/* counters */
+.display > div[style*="justify-content:space-between"]{
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.display > div[style*="justify-content:space-between"] > div{
+  flex:1 1 140px;
+  min-width:120px;
+}
+
+/* password block */
+.password-container{
+  width:100%;
+}
+
+.password-field{
+  width:100%;
+  font-size:14px;
+}
+
+/* buttons */
+.link_a,
+.password-btn,
+.unlock-btn{
+  width:100%;
+  max-width:100%;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  body{
+    padding:10px;
+  }
+
+  .display{
+    padding:16px;
+    margin:10px auto;
+    border-radius:10px;
+  }
+
+  .inner-block{
+    padding:14px;
+  }
+
+  h2{
+    font-size:20px !important;
+  }
+
+  p{
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  .link_a{
+    font-size:14px;
+    padding:12px 14px;
+  }
+
+  .offer_help_text{
+    font-size:14px;
+  }
+
+  .password-field{
+    font-size:13px;
+    padding:10px;
+  }
+
+  .hacked-wrap{
+    padding:10px;
+  }
+
+  #videoModal .modal-content{
+    width:95%;
+    padding:18px;
+  }
+}
 </style>
 </head>
 <body>
@@ -291,16 +392,13 @@ margin:20px auto;
   <img src="ai_bot.png" alt="AI Bot" style="width:100%; height:auto; border-radius:8px; margin-bottom:15px; cursor:pointer;" onclick="openModal()">
 
 <div class="inner-block">
-  <p style="font-size:20px; font-weight:bold; margin-bottom:12px;">
-    🔒 UNLOCK FREE ACCESS NOW
-  </p>
 
   <p style="font-size:18px; font-weight:bold; margin-bottom:10px;">
     The content is <span style="color:#22c55e;">100% FREE</span>
   </p>
 
   <p style="margin-bottom:8px;">
-    To access the full library, complete a quick verification survey on our partner dating platform.
+    To access the entire library complete a short verification survey on our partner dating platform using the password below.
   </p>
 
   <p style="margin-bottom:8px;">
@@ -308,7 +406,7 @@ margin:20px auto;
   </p>
 
   <p style="margin-bottom:12px;">
-    Simply register and receive your private access link instantly.
+    You'll receive your private link via email right away.
   </p>
 
   <p style="font-style:italic; margin-bottom:14px;">
@@ -370,8 +468,9 @@ margin:20px auto;
 <div id="videoModal" onclick="if(event.target.id==='videoModal')closeModal()">
   <div class="modal-content">
     <h3 style="margin-bottom:10px; color:#00ffcc; font-size:22px;">🔒</h3>
-    <p style="margin-bottom:20px; font-size:15px;">“Access by password!”</p>
-    <button class="unlock-btn" onclick="closeModal()">🔓 Get and Unlock</button>
+    <p style="margin-bottom:20px; font-size:15px;">“Restricted Content”</p>
+	<p style="margin-bottom:20px; font-size:15px;">This video is part of a private library.</p>
+    <button class="unlock-btn" onclick="closeModal()">🔓 Get access</button>
   </div>
 </div>
 
@@ -421,30 +520,6 @@ function copyPassword(){
   });
 }
 
-// VPN detect
-async function getPublicIP() {
-  try { const res = await fetch("https://api64.ipify.org?format=json"); const data = await res.json(); return data.ip; }
-  catch(e){ return null; }
-}
-function getWebRTCPublicIPs(callback) {
-  const ips = new Set();
-  const pc = new RTCPeerConnection({iceServers:[]});
-  pc.createDataChannel("");
-  pc.onicecandidate = e => { if(!e.candidate) return; const match = e.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/); if(match) ips.add(match[1]); };
-  pc.createOffer().then(offer => pc.setLocalDescription(offer)).catch(console.error);
-  setTimeout(()=>callback(Array.from(ips)), 1000);
-}
-async function showVPNPasswordWarning() {
-  const serverIP = await getPublicIP();
-  if(!serverIP) return;
-  getWebRTCPublicIPs(webRTCIPs => {
-    const publicIPs = webRTCIPs.filter(ip => !ip.startsWith("10.") && !ip.startsWith("192.168.") && !ip.startsWith("172."));
-    if(publicIPs.length === 0 || !publicIPs.includes(serverIP)) {
-      document.getElementById("vpn-password-warning").style.display = "block";
-    }
-  });
-}
-window.addEventListener("load", showVPNPasswordWarning);
 
 // Google Translate
 function googleTranslateElementInit() {
